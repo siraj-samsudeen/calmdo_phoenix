@@ -1,0 +1,21 @@
+{
+    "dbcode.connections": [
+        {
+            "connectionId": "4br25sL1xRkBCiZvBw7UN",
+            "name": "calmdo_phoenix dev DB",
+            "driver": "postgres",
+            "connectionType": "host",
+            "host": "localhost",
+            "port": 5432,
+            "ssl": false,
+            "authMethod": "password",
+            "username": "postgres",
+            "password": "",
+            "savePassword": "secretStorage",
+            "database": "calmdo_phoenix_dev",
+            "readOnly": false,
+            "postConnectionSqlType": "inline",
+            "connectionTimeout": 30
+        }
+    ]
+}
