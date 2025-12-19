@@ -16,6 +16,16 @@ See `docs/how-to-test.md` for the full testing philosophy. Key principles:
 
 We use [PhoenixTest](https://hexdocs.pm/phoenix_test/PhoenixTest.html) for e2e/integration tests. It provides a unified API that works seamlessly with both LiveView and static pages.
 
+### Setup
+
+Add phoenix_test to your list of dependencies in mix.exs:
+{:phoenix_test, "~> 0.9.1", only: :test, runtime: false}
+
+In config/test.exs specify the endpoint to be used for routing requests:
+config :phoenix_test, :endpoint, MyAppWeb.Endpoint
+
+In ConnCase, PhoenixTest helpers can be included via `import PhoenixTest`
+
 ### Core Pattern
 
 ```elixir

@@ -2,7 +2,7 @@
 
 ## Phase 0: Foundation
 
-- [ ] Add PhoenixTest dependency and configure
+- [x] Add PhoenixTest dependency and configure
 - [ ] Generate authentication with `mix phx.gen.auth Accounts User users --live`
 
 ## Phase 1: Projects
