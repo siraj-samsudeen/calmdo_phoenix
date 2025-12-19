@@ -110,3 +110,6 @@ Use `Req` for HTTP requests (already included). Never use HTTPoison, Tesla, or :
 ## User Preferences
 
 - Use PhoenixTest for testing both LiveView and Controller tests and do NOT use the default LiveViewTest module
+- Check both docs/how-to-test.md (overall testing philosophy) and test/CLAUDE.md (PhoenixTest usage guidelines) for testing guidelines.
+- Let us combine RED and GREEN phases into one commit as that helps us to adjust tests as we discover things during implementation.
+- In this project, I want to do every step by myself - your job is only to guide me and help me with the code. NEVER write the code for me, unless I explicitly ask you to do so.
