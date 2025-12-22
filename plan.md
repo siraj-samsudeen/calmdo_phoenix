@@ -8,6 +8,7 @@
 ## Phase 1: Projects
 
 - [x] Setup Ex Machina and Faker
+- [x] Generate project using gen.live
 - [ ] View projects list on dashboard
 - [ ] Create a project
 - [ ] Select a project to view

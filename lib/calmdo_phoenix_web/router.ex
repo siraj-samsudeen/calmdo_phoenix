@@ -71,5 +71,9 @@ defmodule CalmdoPhoenixWeb.Router do
 
     post "/users/log-in", UserSessionController, :create
     delete "/users/log-out", UserSessionController, :delete
+    live "/projects", ProjectLive.Index, :index
+    live "/projects/new", ProjectLive.Form, :new
+    live "/projects/:id", ProjectLive.Show, :show
+    live "/projects/:id/edit", ProjectLive.Form, :edit
   end
 end

@@ -60,3 +60,20 @@ Connection Info from dev.exs:
 If you only write LiveView tests, you don't need factory in DataCase. If you write context tests (like `accounts_test.exs`), you'll want factories available there too.
 
 **Note:** Can remove factory import from DataCase if only doing LiveView tests now, add it back later if needed for context tests.
+
+### Project Model using phx.gen
+
+- Used --no-scope as all projects should be visible to all users
+
+```bash
+mix phx.gen.live Projects Project projects name description:text created_by:references:users --no-scope
+```
+
+- Added routes to `lib/calmdo_phoenix_web/router.ex` under browser scope
+
+```elixir
+live "/projects", ProjectLive.Index, :index
+live "/projects/new", ProjectLive.Form, :new
+live "/projects/:id", ProjectLive.Show, :show
+live "/projects/:id/edit", ProjectLive.Form, :edit
+```
