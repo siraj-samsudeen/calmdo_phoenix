@@ -34,7 +34,7 @@ conn
 |> click_link("New Project")
 |> fill_in("Name", with: "My Project")
 |> submit()
-|> assert_text("My Project")
+|> assert_has("main", "My Project")
 ```
 
 ### Key Functions
@@ -49,10 +49,8 @@ conn
 | `choose/3`              | Select radio button                 |
 | `check/3` / `uncheck/3` | Toggle checkboxes                   |
 | `submit/1`              | Submit form (triggers phx-submit)   |
-| `assert_text/2`         | Assert text is visible              |
-| `refute_text/2`         | Assert text is NOT visible          |
-| `assert_has/2, /3`      | Assert element exists (by selector) |
-| `refute_has/2, /3`      | Assert element does NOT exist       |
+| `assert_has/2, /3`      | Assert element exists (by selector) or text is visible |
+| `refute_has/2, /3`      | Assert element does NOT exist or text is NOT visible   |
 
 ### What NOT to Use
 
@@ -78,11 +76,11 @@ defmodule CalmdoWeb.ProjectsE2eTest do
       |> click_link("New Project")
       |> fill_in("Name", with: "Test Project 1")
       |> submit()
-      |> assert_text("Test Project 1")
+      |> assert_has("main", "Test Project 1")
 
       # visit the show page
       |> click_link("Show")
-      |> assert_text("Test Project 1")
+      |> assert_has("main", "Test Project 1")
       # back to project lists page
       |> click_link("Back")
 
@@ -90,11 +88,11 @@ defmodule CalmdoWeb.ProjectsE2eTest do
       |> click_link("Edit")
       |> fill_in("Name", with: "Test Project 1 updated")
       |> submit()
-      |> assert_text("Test Project 1 updated")
+      |> assert_has("main", "Test Project 1 updated")
 
       # delete the project, assuming a single project
       |> click_link("Delete")
-      |> refute_text("Test Project 1 updated")
+      |> refute_has("main", "Test Project 1 updated")
     end
 
     # separate test to check more complex features not covered in CRUD
@@ -103,7 +101,7 @@ defmodule CalmdoWeb.ProjectsE2eTest do
 
       conn
       |> visit(~p"/projects/#{project}")
-      |> assert_text("Product Launch")
+      |> assert_has("main", "Product Launch")
     end
   end
 end
@@ -167,7 +165,7 @@ test "user can create a project", %{conn: conn} do
   |> click_link("New Project")
   |> fill_in("Name", with: "Launch Campaign")
   |> submit()
-  |> assert_text("Launch Campaign")
+  |> assert_has("main", "Launch Campaign")
 
   # Verify DB persistence via Context
   assert Projects.get_project_by_name("Launch Campaign")
@@ -182,13 +180,13 @@ test "creates project", %{conn: conn} do
   |> visit(~p"/projects")
   |> assert_path(~p"/projects")           # ❌ Implementation detail
   |> click_link("New Project")
-  |> assert_text("New Project")           # ❌ Testing heading text
+  |> assert_has("main", "New Project")           # ❌ Testing heading text
   |> fill_in("Name", with: "")
   |> submit()
-  |> assert_text("can't be blank")        # ❌ Validation in UI test
+  |> assert_has("main", "can't be blank")        # ❌ Validation in UI test
   |> fill_in("Name", with: "My Project")
   |> submit()
-  |> assert_text("Project created")       # ❌ Flash message
+  |> assert_has("main", "Project created")       # ❌ Flash message
   # ❌ Missing DB verification!
 end
 ```
@@ -234,8 +232,8 @@ conn
 ### Text Assertions
 
 ```elixir
-|> assert_text("My Project")        # Text is visible
-|> refute_text("Deleted Project")   # Text is NOT visible
+|> assert_has("main", "My Project")        # Text is visible
+|> refute_has("main", "Deleted Project")   # Text is NOT visible
 ```
 
 ### Element Assertions
@@ -259,7 +257,7 @@ test "shows project", %{conn: conn, scope: scope} do
 
   conn
   |> visit(~p"/projects/#{project}")
-  |> assert_text("Test Project")
+  |> assert_has("main", "Test Project")
 end
 ```
 
@@ -388,9 +386,9 @@ Before writing a test:
 
 ```elixir
 # ❌ assert_path(~p"/projects/new")
-# ❌ assert_text("New Project")  # heading
-# ❌ assert_text("Project created successfully")  # flash
-# ❌ fill_in("Name", with: "") |> assert_text("can't be blank")
+# ❌ assert_has("main", "New Project")  # heading
+# ❌ assert_has("main", "Project created successfully")  # flash
+# ❌ fill_in("Name", with: "") |> assert_has("main", "can't be blank")
 # ❌ Missing DB verification after mutations
 ```
 
@@ -398,7 +396,7 @@ Before writing a test:
 
 ```elixir
 # ✅ click_link("New Project")  # user action
-# ✅ assert_text("My Project")  # user data (not headings)
+# ✅ assert_has("main", "My Project")  # user data (not headings)
 # ✅ assert Projects.get_project_by_name("My Project")  # DB via Context
 # ✅ refute Projects.get_project_by_name("Deleted")
 # ✅ Test edge cases once if you've seen the bug
