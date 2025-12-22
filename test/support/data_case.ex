@@ -24,6 +24,7 @@ defmodule CalmdoPhoenix.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import CalmdoPhoenix.DataCase
+      import CalmdoPhoenix.Factory
     end
   end
 

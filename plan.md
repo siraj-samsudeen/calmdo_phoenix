@@ -7,7 +7,8 @@
 
 ## Phase 1: Projects
 
-- [ ] View empty projects list on dashboard
+- [x] Setup Ex Machina and Faker
+- [ ] View projects list on dashboard
 - [ ] Create a project
 - [ ] Select a project to view
 - [ ] Edit a project

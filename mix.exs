@@ -68,7 +68,9 @@ defmodule CalmdoPhoenix.MixProject do
       {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
       {:phoenix_test, only: :test, runtime: false, github: "siraj-samsudeen/phoenix_test"},
-      {:mix_test_interactive, "~> 5.0", only: :dev, runtime: false}
+      {:mix_test_interactive, "~> 5.0", only: :dev, runtime: false},
+      {:ex_machina, "~> 2.8", only: :test},
+      {:faker, "~> 0.18", only: :test}
     ]
   end
 

@@ -29,6 +29,7 @@ defmodule CalmdoPhoenixWeb.ConnCase do
       import Phoenix.ConnTest
       import CalmdoPhoenixWeb.ConnCase
       import PhoenixTest
+      import CalmdoPhoenix.Factory
     end
   end
 
