@@ -49,9 +49,9 @@ defmodule CalmdoPhoenix.Projects do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_project(attrs) do
+  def create_project(scope, attrs) do
     %Project{}
-    |> Project.changeset(attrs)
+    |> Project.changeset(attrs, scope)
     |> Repo.insert()
   end
 
@@ -98,7 +98,7 @@ defmodule CalmdoPhoenix.Projects do
       %Ecto.Changeset{data: %Project{}}
 
   """
-  def change_project(%Project{} = project, attrs \\ %{}) do
-    Project.changeset(project, attrs)
+  def change_project(%Project{} = project, attrs \\ %{}, scope) do
+    Project.changeset(project, attrs, scope)
   end
 end

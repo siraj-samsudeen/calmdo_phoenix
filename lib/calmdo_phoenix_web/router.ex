@@ -54,6 +54,8 @@ defmodule CalmdoPhoenixWeb.Router do
       on_mount: [{CalmdoPhoenixWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+      # TODO: what is the diff between putting the router here vs in :mount_current_scope below
+      live "/projects/new", ProjectLive.Form, :new
     end
 
     post "/users/update-password", UserSessionController, :update_password
@@ -72,7 +74,6 @@ defmodule CalmdoPhoenixWeb.Router do
     post "/users/log-in", UserSessionController, :create
     delete "/users/log-out", UserSessionController, :delete
     live "/projects", ProjectLive.Index, :index
-    live "/projects/new", ProjectLive.Form, :new
     live "/projects/:id", ProjectLive.Show, :show
     live "/projects/:id/edit", ProjectLive.Form, :edit
   end

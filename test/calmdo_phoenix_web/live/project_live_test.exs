@@ -3,6 +3,8 @@ defmodule CalmdoPhoenixWeb.ProjectLiveTest do
 
   import Phoenix.LiveViewTest
   import CalmdoPhoenix.ProjectsFixtures
+  alias CalmdoPhoenix.Repo
+  alias CalmdoPhoenix.Projects.Project
 
   @create_attrs %{name: "some name", description: "some description"}
   @update_attrs %{name: "some updated name", description: "some updated description"}
@@ -14,6 +16,7 @@ defmodule CalmdoPhoenixWeb.ProjectLiveTest do
   end
 
   describe "Index" do
+    setup :register_and_log_in_user
     setup [:create_project]
 
     test "lists all projects", %{conn: conn, project: project} do
@@ -21,6 +24,24 @@ defmodule CalmdoPhoenixWeb.ProjectLiveTest do
 
       assert html =~ "Listing Projects"
       assert html =~ project.name
+    end
+
+    @tag :focus
+    test "creates a new project", %{conn: conn, user: user} do
+      project = build(:project)
+
+      conn
+      |> visit(~p"/projects")
+      |> click_link("New Project")
+      |> fill_in("Name", with: project.name)
+      |> fill_in("Description", with: project.description)
+      |> submit()
+      |> assert_path(~p"/projects")
+      |> assert_has("main", project.name)
+      |> assert_has("main", project.description)
+
+      new_project = Repo.get_by(Project, name: project.name)
+      assert new_project.created_by == user.id
     end
 
     test "saves new project", %{conn: conn} do

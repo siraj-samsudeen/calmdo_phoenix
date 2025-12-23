@@ -51,12 +51,18 @@ defmodule CalmdoPhoenixWeb.ProjectLive.Form do
     socket
     |> assign(:page_title, "New Project")
     |> assign(:project, project)
-    |> assign(:form, to_form(Projects.change_project(project)))
+    |> assign(:form, to_form(Projects.change_project(project, %{}, socket.assigns.current_scope)))
   end
 
   @impl true
   def handle_event("validate", %{"project" => project_params}, socket) do
-    changeset = Projects.change_project(socket.assigns.project, project_params)
+    changeset =
+      Projects.change_project(
+        socket.assigns.project,
+        project_params,
+        socket.assigns.current_scope
+      )
+
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
@@ -78,7 +84,7 @@ defmodule CalmdoPhoenixWeb.ProjectLive.Form do
   end
 
   defp save_project(socket, :new, project_params) do
-    case Projects.create_project(project_params) do
+    case Projects.create_project(socket.assigns.current_scope, project_params) do
       {:ok, project} ->
         {:noreply,
          socket
