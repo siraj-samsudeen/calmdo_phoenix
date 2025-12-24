@@ -2,6 +2,7 @@ defmodule CalmdoPhoenix.ProjectsTest do
   use CalmdoPhoenix.DataCase
 
   alias CalmdoPhoenix.Projects
+  import CalmdoPhoenix.AccountsFixtures, only: [user_scope_fixture: 0]
 
   describe "projects" do
     alias CalmdoPhoenix.Projects.Project
@@ -23,13 +24,16 @@ defmodule CalmdoPhoenix.ProjectsTest do
     test "create_project/1 with valid data creates a project" do
       valid_attrs = %{name: "some name", description: "some description"}
 
-      assert {:ok, %Project{} = project} = Projects.create_project(valid_attrs)
+      assert {:ok, %Project{} = project} =
+               Projects.create_project(user_scope_fixture(), valid_attrs)
+
       assert project.name == "some name"
       assert project.description == "some description"
     end
 
     test "create_project/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Projects.create_project(@invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} =
+               Projects.create_project(user_scope_fixture(), @invalid_attrs)
     end
 
     test "update_project/2 with valid data updates the project" do

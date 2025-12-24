@@ -4,6 +4,7 @@ defmodule CalmdoPhoenix.Projects do
   """
 
   import Ecto.Query, warn: false
+  import Ecto.Changeset, only: [put_change: 3]
   alias CalmdoPhoenix.Repo
 
   alias CalmdoPhoenix.Projects.Project
@@ -51,7 +52,8 @@ defmodule CalmdoPhoenix.Projects do
   """
   def create_project(scope, attrs) do
     %Project{}
-    |> Project.changeset(attrs, scope)
+    |> Project.changeset(attrs)
+    |> put_change(:created_by, scope.user.id)
     |> Repo.insert()
   end
 
@@ -98,7 +100,7 @@ defmodule CalmdoPhoenix.Projects do
       %Ecto.Changeset{data: %Project{}}
 
   """
-  def change_project(%Project{} = project, attrs \\ %{}, scope) do
-    Project.changeset(project, attrs, scope)
+  def change_project(%Project{} = project, attrs \\ %{}) do
+    Project.changeset(project, attrs)
   end
 end

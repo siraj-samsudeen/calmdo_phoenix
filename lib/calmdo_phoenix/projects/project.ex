@@ -11,10 +11,9 @@ defmodule CalmdoPhoenix.Projects.Project do
   end
 
   @doc false
-  def changeset(project, attrs, scope) do
+  def changeset(project, attrs) do
     project
     |> cast(attrs, [:name, :description])
     |> validate_required([:name, :description])
-    |> put_change(:created_by, scope.user.id)
   end
 end
