@@ -209,3 +209,14 @@ end
 - it's just a struct wrapper around `User` - see [scope.ex](lib/calmdo_phoenix/accounts/scope.ex). 
 - ExMachina's `insert/1` tries to persist to the database via `Repo.insert`, which fails for non-Ecto structs. `build/1` just constructs the struct in memory without any DB interaction, which is exactly what we need for Scope. 
 
+## 24 Dec 2025 Wednesday
+
+### Precommit hooks setup
+
+- Noticed when doing the git diff that there were some formatting differences between the previous commit and the current working tree, and decided to install the pre-commit hooks to run the `mix precommit` alias automatically.
+- installed the pre-commit hook using `brew install pre-commit`
+- updated the mix.exs file to include the precommit and prepush aliases
+- updated the .pre-commit-config.yaml file to include the precommit and prepush hooks
+- then to set up the hooks, ran `pre-commit install` - this installs the pre-commit hooks in the .git/hooks directory
+- to commit these files (as we have some compiler warnings reported as errors), we are gonna use `git commit --no-verify` to bypass the pre-commit hooks
+

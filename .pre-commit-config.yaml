@@ -1,0 +1,17 @@
+repos:
+  - repo: local
+    hooks:
+      - id: mix-precommit
+        name: mix precommit (no tests)
+        entry: mix precommit
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+      - id: mix-prepush
+        name: mix prepush (with tests)
+        entry: mix prepush
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]

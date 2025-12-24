@@ -93,7 +93,8 @@ defmodule CalmdoPhoenix.MixProject do
         "esbuild calmdo_phoenix --minify",
         "phx.digest"
       ],
-      precommit: ["compile --warning-as-errors", "deps.unlock --unused", "format", "test"]
+      precommit: ["compile --warning-as-errors", "deps.unlock --unused", "format"],
+      prepush: ["compile --warning-as-errors", "deps.unlock --unused", "format", "test"]
     ]
   end
 end
