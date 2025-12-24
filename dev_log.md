@@ -220,3 +220,68 @@ end
 - then to set up the hooks, ran `pre-commit install` - this installs the pre-commit hooks in the .git/hooks directory
 - to commit these files (as we have some compiler warnings reported as errors), we are gonna use `git commit --no-verify` to bypass the pre-commit hooks
 
+### Enforce NOT NULL constraint for created_by in projects
+
+#### RED
+
+the previous test did not catch that a DB constraint was missing for the created_by field in the projects table. To add the DB constraint, we need a test to cover for this. 
+
+- To test the not-null constraint, we could use the changeset as all context functions will be routed through the changeset. 
+- We tried to use the Projects.create_project function, but since it expects a scope, there is no way to have a valid scope struct without a user ID inside the user. 
+- Hence, we tested for 2 things
+  - changeset catches the missing created_by field
+  - DB constraint catches the missing created_by field - this is done by directing using Repo.insert to bypass the changeset
+
+```elixir
+test "create project without created_by should be rejected" do
+  # Changeset validation
+  changeset = Project.changeset(%Project{}, params_for(:project))
+  assert "can't be blank" in errors_on(changeset).created_by
+
+  # DB constraint
+  assert_raise Postgrex.Error, ~r/not_null_violation/, fn ->
+    Repo.insert!(build(:project))
+  end
+end
+```
+
+#### GREEN
+
+Three-layer enforcement:
+
+**1. Migration** - DB-level constraint (`priv/repo/migrations/20251224103213_add_not_null_for_created_by_in_project.exs`)
+```elixir
+alter table(:projects) do
+  modify :created_by, :integer, null: false
+end
+```
+
+**2. Changeset validation** - Application-level constraint (`lib/calmdo_phoenix/projects/project.ex`)
+- Added `:created_by` to `cast/4` permitted fields
+- Added `:created_by` to `validate_required/2`
+
+**3. Context** - Set `created_by` in attrs before changeset (`lib/calmdo_phoenix/projects.ex`)
+```elixir
+def create_project(scope, attrs) do
+  attrs = Map.put(attrs, "created_by", scope.user.id)
+  %Project{}
+  |> Project.changeset(attrs)
+  |> Repo.insert()
+end
+```
+
+This approach is cleaner than `put_change/3` because:
+- All field handling happens in one place (changeset)
+- Validation rules apply consistently
+- Removed unused `Ecto.Changeset` import
+
+#### Side effects
+
+**String keys** - Ecto.cast does NOT allow mixing of atom and string keys. Hence, had to change all the occurence of atom keys to use string keys. 
+
+```elixir
+# Before
+@invalid_attrs %{name: nil, description: nil}
+# After
+@invalid_attrs %{"name" => nil, "description" => nil}
+```

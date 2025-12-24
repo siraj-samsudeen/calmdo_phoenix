@@ -13,7 +13,7 @@ defmodule CalmdoPhoenix.Projects.Project do
   @doc false
   def changeset(project, attrs) do
     project
-    |> cast(attrs, [:name, :description])
-    |> validate_required([:name, :description])
+    |> cast(attrs, [:name, :description, :created_by])
+    |> validate_required([:name, :description, :created_by])
   end
 end

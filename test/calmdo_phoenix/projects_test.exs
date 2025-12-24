@@ -9,7 +9,7 @@ defmodule CalmdoPhoenix.ProjectsTest do
 
     import CalmdoPhoenix.ProjectsFixtures
 
-    @invalid_attrs %{name: nil, description: nil}
+    @invalid_attrs %{"name" => nil, "description" => nil}
 
     test "list_projects/0 returns all projects" do
       project = project_fixture()
@@ -22,13 +22,25 @@ defmodule CalmdoPhoenix.ProjectsTest do
     end
 
     test "create_project/1 with valid data creates a project" do
-      valid_attrs = %{name: "some name", description: "some description"}
+      valid_attrs = %{"name" => "some name", "description" => "some description"}
 
       assert {:ok, %Project{} = project} =
                Projects.create_project(user_scope_fixture(), valid_attrs)
 
       assert project.name == "some name"
       assert project.description == "some description"
+    end
+
+    @tag :focus
+    test "create project without created_by should be rejected" do
+      # Test changeset validation
+      changeset = Project.changeset(%Project{}, params_for(:project))
+      assert "can't be blank" in errors_on(changeset).created_by
+
+      # Test DB constraint separately
+      assert_raise Postgrex.Error, ~r/not_null_violation/, fn ->
+        Repo.insert!(build(:project))
+      end
     end
 
     test "create_project/1 with invalid data returns error changeset" do

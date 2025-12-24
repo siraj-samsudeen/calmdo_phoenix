@@ -7,16 +7,16 @@ defmodule CalmdoPhoenix.ProjectsFixtures do
   @doc """
   Generate a project.
   """
-  import CalmdoPhoenix.Factory
+  import CalmdoPhoenix.AccountsFixtures, only: [user_scope_fixture: 0]
 
   def project_fixture(attrs \\ %{}) do
     project_attrs =
       Enum.into(attrs, %{
-        description: "some description",
-        name: "some name"
+        "description" => "some description",
+        "name" => "some name"
       })
 
-    {:ok, project} = CalmdoPhoenix.Projects.create_project(build(:scope), project_attrs)
+    {:ok, project} = CalmdoPhoenix.Projects.create_project(user_scope_fixture(), project_attrs)
 
     project
   end
